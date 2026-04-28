@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Activity, Database, Cpu, LayoutDashboard, Zap, Radio, History } from 'lucide-react';
+import { WebSocketStatus } from '@/components/WebSocketStatus';  // ← ADD THIS LINE
 
 const NAV_ITEMS = [
   { path: '/', label: 'Home', icon: Zap },
@@ -21,6 +22,7 @@ export default function TopNav() {
           <Activity className="w-5 h-5 text-primary group-hover:drop-shadow-[0_0_8px_hsl(var(--primary))] transition-all" />
           <span className="font-bold text-sm tracking-wider text-gradient-primary">5G-DIS</span>
         </Link>
+
         <div className="flex items-center gap-1">
           {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
             <Link
@@ -38,6 +40,10 @@ export default function TopNav() {
             </Link>
           ))}
         </div>
+
+        {/* ← ADD THIS — shows live WebSocket connection status on the right side of nav */}
+        <WebSocketStatus />
+
       </div>
     </nav>
   );

@@ -42,27 +42,33 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const [feedRes, alertsRes] = await Promise.all([
+        const [feedRes, alertsRes, logsRes] = await Promise.all([
           fetch('http://localhost:4000/api/feed'),
           fetch('http://localhost:4000/api/alerts'),
+          fetch('http://localhost:4000/api/logs'),
         ]);
         
         const feedJson = await feedRes.json();
         const alertsJson = await alertsRes.json();
+        const logsJson = await logsRes.json();
 
         // ✅ Handle both array and object response
         const feedData = Array.isArray(feedJson) ? feedJson : feedJson.data || [];
         const alertsData = Array.isArray(alertsJson) ? alertsJson : alertsJson.data || [];
+        const logsData = Array.isArray(logsJson) ? logsJson : logsJson.data || [];
 
         // ✅ DEBUG (important)
         console.log("📦 Feed API Response:", feedJson);
         console.log("📦 Alerts API Response:", alertsJson);
+        console.log("📦 Logs API Response:", logsJson);
 
         console.log("✅ Parsed Feed:", feedData);
         console.log("✅ Parsed Alerts:", alertsData);
+        console.log("✅ Parsed Logs:", logsData);
 
         setFeedItems(feedData.slice(0, 50));
         setAlerts(alertsData.slice(0, 50));
+        setProcessingLogs(logsData.slice(0, 100));
       } catch (err) {
         console.error("❌ Error loading initial data:", err);
       } finally {
@@ -202,7 +208,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     if (intervalRef.current) return;
     setIsSimulationRunning(true);
 
-    const tick = () => {
+    const tick = async () => {
       const tweet = generateTweet();
       const feedItem: FeedItem = {
         id: tweet.id,
@@ -212,6 +218,16 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         location: tweet.location,
       };
       setFeedItems(prev => [feedItem, ...prev].slice(0, 50));
+      try {
+        await fetch('http://localhost:4000/api/feed', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(feedItem),
+        });
+      } catch (error) {
+        console.warn('Failed to save tweet to DB3:', error);
+      }
+
       processData(tweet.id, 'tweet', tweet.text, tweet.location || 'Unknown Location');
     };
 

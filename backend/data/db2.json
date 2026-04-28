@@ -1,6 +1,16 @@
 {
   "feedbackHistory": [
     {
+      "id": "tweet-1777377553732-grhn",
+      "content": "Great weather for a walk 🚴",
+      "author": "@User",
+      "timestamp": "2026-04-28T11:59:13.967Z",
+      "location": "Pune IT Park, Pune",
+      "edgeFilterResult": "Non-emergency content detected. Filtered out - not disaster-related.",
+      "type": "random_tweet",
+      "reason": "Not disaster-related"
+    },
+    {
       "id": "feedback-1774425900000-xyzp",
       "type": "random_tweet",
       "content": "Just had the best coffee ever! ☕ #morningvibes",
@@ -22,8 +32,8 @@
     }
   ],
   "filteredSummary": {
-    "totalFiltered": 2,
-    "successfulFilter": 2,
-    "filterRate": "100%"
+    "totalFiltered": 3,
+    "successfulFilter": 3,
+    "filterRate": "100.0%"
   }
 }

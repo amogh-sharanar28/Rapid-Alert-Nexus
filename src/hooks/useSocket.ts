@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const SOCKET_URL = 'http://localhost:4000';
@@ -9,82 +9,132 @@ interface UseSocketOptions {
   onProcessingUpdate?: (data: { log: any; summary: any }) => void;
 }
 
-export function useSocket(options: UseSocketOptions = {}) {
-  const socketRef = useRef<Socket | null>(null);
-  const optionsRef = useRef(options);
-  optionsRef.current = options;
+// ─── Single shared socket instance across all tabs/components ─────────────
+// This prevents creating multiple socket connections when the hook
+// is used in more than one component.
+let globalSocket: Socket | null = null;
+let globalSocketRefCount = 0;
 
-  useEffect(() => {
-    // Create socket connection with explicit URL and options
-    socketRef.current = io(SOCKET_URL, {
+function getSharedSocket(): Socket {
+  if (!globalSocket || !globalSocket.connected) {
+    globalSocket = io(SOCKET_URL, {
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
+      // Try WebSocket first, fall back to polling if blocked
       transports: ['websocket', 'polling'],
-      forceNew: true,
+      forceNew: false,
     });
+  }
+  return globalSocket;
+}
 
-    const socket = socketRef.current;
+export function useSocket(options: UseSocketOptions = {}) {
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
 
-    socket.on('connect', () => {
+  // ✅ FIX 1: Track connection status as real React state so components re-render
+  const [isConnected, setIsConnected] = useState(false);
+  const [socketId, setSocketId] = useState<string | undefined>(undefined);
+  const [lastEvent, setLastEvent] = useState<{ type: string; time: Date } | null>(null);
+
+  useEffect(() => {
+    const socket = getSharedSocket();
+    globalSocketRefCount++;
+
+    // ── Connection events ──────────────────────────────────────────────
+    const onConnect = () => {
       console.log('✅ Socket connected:', socket.id);
-    });
-
-    socket.on('disconnect', (reason) => {
-      console.log('❌ Socket disconnected:', reason);
-    });
-
-    socket.on('connect_error', (error) => {
-      console.error('🔴 Socket connection error:', error.message);
-    });
-
-    socket.on('new_alert', (alert) => {
-      console.log('📨 RECEIVED ALERT:', alert.id, alert.incidentType);
-      if (optionsRef.current.onNewAlert) {
-        optionsRef.current.onNewAlert(alert);
-      }
-    });
-
-    socket.on('new_feed', (feed) => {
-      console.log('📨 RECEIVED FEED:', feed.id);
-      if (optionsRef.current.onNewFeed) {
-        optionsRef.current.onNewFeed(feed);
-      }
-    });
-
-    socket.on('processing_update', (data) => {
-      console.log('📨 RECEIVED PROCESSING UPDATE:', data.log?.id, data.log?.stage);
-      if (optionsRef.current.onProcessingUpdate) {
-        optionsRef.current.onProcessingUpdate(data);
-      }
-    });
-
-    // Cleanup on unmount
-    return () => {
-      console.log('🧹 Cleaning up socket connection');
-      socket.disconnect();
-      socketRef.current = null;
+      setIsConnected(true);
+      setSocketId(socket.id);
     };
-  }, []);
+
+    const onDisconnect = (reason: string) => {
+      console.log('❌ Socket disconnected:', reason);
+      setIsConnected(false);
+      setSocketId(undefined);
+    };
+
+    const onConnectError = (error: Error) => {
+      console.error('🔴 Socket connection error:', error.message);
+      setIsConnected(false);
+    };
+
+    // ── Data events ────────────────────────────────────────────────────
+    const onNewAlert = (alert: any) => {
+      console.log('📨 RECEIVED ALERT via WebSocket:', alert.id, alert.incidentType);
+      setLastEvent({ type: 'new_alert', time: new Date() });
+      optionsRef.current.onNewAlert?.(alert);
+    };
+
+    const onNewFeed = (feed: any) => {
+      console.log('📨 RECEIVED FEED via WebSocket:', feed.id);
+      setLastEvent({ type: 'new_feed', time: new Date() });
+      optionsRef.current.onNewFeed?.(feed);
+    };
+
+    const onProcessingUpdate = (data: { log: any; summary: any }) => {
+      console.log('📨 RECEIVED PROCESSING UPDATE via WebSocket:', data.log?.id, data.log?.stage);
+      setLastEvent({ type: 'processing_update', time: new Date() });
+      optionsRef.current.onProcessingUpdate?.(data);
+    };
+
+    // ── Register listeners ─────────────────────────────────────────────
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('connect_error', onConnectError);
+    socket.on('new_alert', onNewAlert);
+    socket.on('new_feed', onNewFeed);
+    socket.on('processing_update', onProcessingUpdate);
+
+    // If socket already connected when this hook mounts (e.g. second component),
+    // sync the state immediately instead of waiting for next 'connect' event
+    if (socket.connected) {
+      setIsConnected(true);
+      setSocketId(socket.id);
+    }
+
+    // ── Cleanup: remove THIS component's listeners only ────────────────
+    // We do NOT disconnect the socket itself — the shared socket stays alive
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('connect_error', onConnectError);
+      socket.off('new_alert', onNewAlert);
+      socket.off('new_feed', onNewFeed);
+      socket.off('processing_update', onProcessingUpdate);
+
+      globalSocketRefCount--;
+      // Only disconnect the actual socket when no components are using it
+      if (globalSocketRefCount <= 0) {
+        console.log('🧹 Last socket consumer unmounted — disconnecting');
+        globalSocket?.disconnect();
+        globalSocket = null;
+        globalSocketRefCount = 0;
+      }
+    };
+  }, []); // empty deps — socket is created once
 
   const disconnect = useCallback(() => {
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-      socketRef.current = null;
-    }
+    globalSocket?.disconnect();
+    globalSocket = null;
+    setIsConnected(false);
   }, []);
 
   const reconnect = useCallback(() => {
-    if (socketRef.current) {
-      socketRef.current.connect();
+    if (globalSocket && !globalSocket.connected) {
+      globalSocket.connect();
+    } else if (!globalSocket) {
+      globalSocket = getSharedSocket();
     }
   }, []);
 
   return {
-    socket: socketRef.current,
+    isConnected,
+    socketId,
+    lastEvent,
     disconnect,
     reconnect,
-    isConnected: socketRef.current?.connected ?? false,
   };
 }

@@ -112,7 +112,7 @@ const IncidentTimeline = React.memo(function IncidentTimeline({ report }: { repo
 });
 
 export default function DispatchHistoryPage() {
-  const { dispatchedReports } = useSimulation();
+  const { dispatchedReports, dispatchLogs } = useSimulation();
   const [locationFilter, setLocationFilter] = useState('');
   const [teamFilter, setTeamFilter] = useState<string>('all');
 

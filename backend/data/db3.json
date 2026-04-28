@@ -1,6 +1,99 @@
 {
   "processingLogs": [
     {
+      "id": "log-1777377553767-1",
+      "timestamp": "2026-04-28T11:59:13.767Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377553732-grhn",
+      "stage": "edge_filter",
+      "message": "🐦 Tweet received from Pune IT Park, Pune. Running keyword filter...",
+      "result": "Non-emergency content detected. Filtered out - not disaster-related."
+    },
+    {
+      "id": "log-1777377547893-4",
+      "timestamp": "2026-04-28T11:59:08.343Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377547877-o0qk",
+      "stage": "queue_distribution",
+      "message": "Publishing to message queue → fire_department channels. Location: New Delhi, New Delhi",
+      "result": "Distributed to 1 responder channel(s) for New Delhi, New Delhi",
+      "priority": "HIGH",
+      "incidentType": "fire"
+    },
+    {
+      "id": "log-1777377547893-3",
+      "timestamp": "2026-04-28T11:59:08.193Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377547877-o0qk",
+      "stage": "alert_generation",
+      "message": "Generating structured alert for fire incident at New Delhi, New Delhi",
+      "result": "Alert created with HIGH priority",
+      "priority": "HIGH",
+      "incidentType": "fire"
+    },
+    {
+      "id": "log-1777377547893-2",
+      "timestamp": "2026-04-28T11:59:08.043Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377547877-o0qk",
+      "stage": "ai_analysis",
+      "message": "AI NLP analysis: \"🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! ...\" Location: New Delhi, New Delhi",
+      "result": "Fire detected → Priority: HIGH",
+      "priority": "HIGH",
+      "incidentType": "fire"
+    },
+    {
+      "id": "log-1777377547893-1",
+      "timestamp": "2026-04-28T11:59:07.893Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377547877-o0qk",
+      "stage": "edge_filter",
+      "message": "🐦 Tweet received from New Delhi, New Delhi. Running keyword filter...",
+      "result": "Disaster-related content detected at New Delhi, New Delhi. Forwarding to AI module."
+    },
+    {
+      "id": "log-1777377542088-4",
+      "timestamp": "2026-04-28T11:59:02.538Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377542019-h6m6",
+      "stage": "queue_distribution",
+      "message": "Publishing to message queue → fire_department channels. Location: New Delhi, New Delhi",
+      "result": "Distributed to 1 responder channel(s) for New Delhi, New Delhi",
+      "priority": "HIGH",
+      "incidentType": "fire"
+    },
+    {
+      "id": "log-1777377542088-3",
+      "timestamp": "2026-04-28T11:59:02.388Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377542019-h6m6",
+      "stage": "alert_generation",
+      "message": "Generating structured alert for fire incident at New Delhi, New Delhi",
+      "result": "Alert created with HIGH priority",
+      "priority": "HIGH",
+      "incidentType": "fire"
+    },
+    {
+      "id": "log-1777377542088-2",
+      "timestamp": "2026-04-28T11:59:02.238Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377542019-h6m6",
+      "stage": "ai_analysis",
+      "message": "AI NLP analysis: \"🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! ...\" Location: New Delhi, New Delhi",
+      "result": "Fire detected → Priority: HIGH",
+      "priority": "HIGH",
+      "incidentType": "fire"
+    },
+    {
+      "id": "log-1777377542088-1",
+      "timestamp": "2026-04-28T11:59:02.088Z",
+      "source": "tweet",
+      "sourceId": "tweet-1777377542019-h6m6",
+      "stage": "edge_filter",
+      "message": "🐦 Tweet received from New Delhi, New Delhi. Running keyword filter...",
+      "result": "Disaster-related content detected at New Delhi, New Delhi. Forwarding to AI module."
+    },
+    {
       "id": "log-1777296040180-3",
       "timestamp": "2026-04-27T13:20:40.480Z",
       "source": "tweet",
@@ -1472,9 +1565,9 @@
     }
   ],
   "logSummary": {
-    "totalProcessed": 35,
-    "successfulAlerts": 35,
-    "filteredOut": 0,
+    "totalProcessed": 38,
+    "successfulAlerts": 37,
+    "filteredOut": 1,
     "averageProcessingTime": "450ms"
   }
 }

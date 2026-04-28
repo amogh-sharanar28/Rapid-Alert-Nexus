@@ -116,7 +116,7 @@ function DispatchedIncidentCard({ report }: { report: DispatchReport }) {
                 <div className="space-y-1 border-t border-border/40 pt-1.5">
                   {report.coordinationNotes.map(n => (
                     <div key={n.id} className="text-[10px] text-muted-foreground">
-                      <span className="font-mono text-[9px]">{n.timestamp.toLocaleTimeString()}</span>{' '}
+                      <span className="font-mono text-[9px]">{new Date(n.timestamp).toLocaleTimeString()}</span>{' '}
                       <span className="font-semibold text-foreground">{n.author}:</span> {n.text}
                     </div>
                   ))}
@@ -169,7 +169,7 @@ function AlertCard({ alert, onDispatch, isDispatched }: { alert: AlertType; onDi
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground font-mono">{alert.timestamp.toLocaleTimeString()}</span>
+              <span className="text-xs text-muted-foreground font-mono">{new Date(alert.timestamp).toLocaleTimeString()}</span>
             </div>
             {isDispatched ? (
               <Badge variant="outline" className="text-[10px] gap-1 border-success/40 text-success bg-success/10">

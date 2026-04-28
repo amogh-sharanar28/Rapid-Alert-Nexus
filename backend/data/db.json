@@ -1,6 +1,42 @@
 {
   "alerts": [
     {
+      "id": "alert-1777377547893-zqif",
+      "priority": "HIGH",
+      "incidentType": "fire",
+      "location": "New Delhi, New Delhi",
+      "description": "🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! Building engulfed in flames. #emergency",
+      "timestamp": "2026-04-28T11:59:07.893Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777377547877-o0qk",
+      "responderRoles": [
+        "all",
+        "fire_department"
+      ]
+    },
+    {
+      "id": "alert-1777377542088-uror",
+      "priority": "HIGH",
+      "incidentType": "fire",
+      "location": "New Delhi, New Delhi",
+      "description": "🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! Building engulfed in flames. #emergency",
+      "timestamp": "2026-04-28T11:59:02.088Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777377542019-h6m6",
+      "responderRoles": [
+        "all",
+        "fire_department"
+      ]
+    },
+    {
       "id": "alert-1777296040180-wj5n",
       "priority": "HIGH",
       "incidentType": "medical",
@@ -669,6 +705,27 @@
     }
   ],
   "feed": [
+    {
+      "id": "tweet-1777377553732-grhn",
+      "type": "tweet",
+      "content": "Great weather for a walk 🚴",
+      "timestamp": "2026-04-28T11:59:13.732Z",
+      "location": "Pune IT Park, Pune"
+    },
+    {
+      "id": "tweet-1777377547877-o0qk",
+      "type": "tweet",
+      "content": "🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! Building engulfed in flames. #emergency",
+      "timestamp": "2026-04-28T11:59:07.877Z",
+      "location": "New Delhi, New Delhi"
+    },
+    {
+      "id": "tweet-1777377542019-h6m6",
+      "type": "tweet",
+      "content": "🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! Building engulfed in flames. #emergency",
+      "timestamp": "2026-04-28T11:59:02.019Z",
+      "location": "New Delhi, New Delhi"
+    },
     {
       "id": "tweet-1774425794055-4wde",
       "type": "tweet",
