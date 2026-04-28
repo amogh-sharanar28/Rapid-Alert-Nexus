@@ -47,9 +47,20 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
           fetch('http://localhost:4000/api/alerts'),
         ]);
         
-        const feedData = await feedRes.json();
-        const alertsData = await alertsRes.json();
-        
+        const feedJson = await feedRes.json();
+        const alertsJson = await alertsRes.json();
+
+        // ✅ Handle both array and object response
+        const feedData = Array.isArray(feedJson) ? feedJson : feedJson.data || [];
+        const alertsData = Array.isArray(alertsJson) ? alertsJson : alertsJson.data || [];
+
+        // ✅ DEBUG (important)
+        console.log("📦 Feed API Response:", feedJson);
+        console.log("📦 Alerts API Response:", alertsJson);
+
+        console.log("✅ Parsed Feed:", feedData);
+        console.log("✅ Parsed Alerts:", alertsData);
+
         setFeedItems(feedData.slice(0, 50));
         setAlerts(alertsData.slice(0, 50));
       } catch (err) {
@@ -284,42 +295,41 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     : alerts.filter(a => a.responderRoles.includes(selectedRole));
 
 
-  const contextValue = useMemo(() => ({
-  alerts,
-  processingLogs,
-  feedItems,
-  isSimulationRunning,
-  selectedRole,
-  setSelectedRole,
-  startSimulation,
-  stopSimulation,
-  addManualReport,
-  addImageReport,
-  filteredAlerts,
-  dispatchedReports,
-  addDispatchReport,
-  teamResponses,
-  addTeamResponse,
-  dispatchLogs,
-  updateTeamStatus,
-  addCoordinationNote,
-}), [
-  alerts,
-  processingLogs,
-  feedItems,
-  isSimulationRunning,
-  selectedRole,
-  filteredAlerts,
-  dispatchedReports,
-  teamResponses,
-  dispatchLogs,
-]);
+  const contextValue = React.useMemo(() => ({
+    alerts,
+    processingLogs,
+    feedItems,
+    isSimulationRunning,
+    selectedRole,
+    setSelectedRole,
+    startSimulation,
+    stopSimulation,
+    addManualReport,
+    addImageReport,
+    filteredAlerts,
+    dispatchedReports,
+    addDispatchReport,
+    teamResponses,
+    addTeamResponse,
+    dispatchLogs,
+    updateTeamStatus,
+    addCoordinationNote,
+  }), [
+    alerts,
+    processingLogs,
+    feedItems,
+    isSimulationRunning,
+    selectedRole,
+    dispatchedReports,
+    teamResponses,
+    dispatchLogs
+  ]);
 
   return (
-  <SimulationContext.Provider value={contextValue}>
-    {children}
-  </SimulationContext.Provider>
-);
+    <SimulationContext.Provider value={contextValue}>
+      {children}
+    </SimulationContext.Provider>
+  );
 }
 
 export function useSimulation() {
