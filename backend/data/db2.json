@@ -1,0 +1,29 @@
+{
+  "feedbackHistory": [
+    {
+      "id": "feedback-1774425900000-xyzp",
+      "type": "random_tweet",
+      "content": "Just had the best coffee ever! ☕ #morningvibes",
+      "author": "@CoffeeLovers",
+      "timestamp": "2026-03-25T08:05:00.000Z",
+      "location": "Mumbai Downtown, Mumbai",
+      "edgeFilterResult": "Non-emergency content detected. Filtered out - not disaster-related.",
+      "reason": "Not disaster-related"
+    },
+    {
+      "id": "feedback-1774425905000-abcd",
+      "type": "random_tweet",
+      "content": "Beautiful sunset today! 🌅 #nature",
+      "author": "@NaturePhotog",
+      "timestamp": "2026-03-25T08:05:05.000Z",
+      "location": "Bangalore IT Hub, Bangalore",
+      "edgeFilterResult": "Non-emergency content detected. Filtered out - not disaster-related.",
+      "reason": "Not disaster-related"
+    }
+  ],
+  "filteredSummary": {
+    "totalFiltered": 2,
+    "successfulFilter": 2,
+    "filterRate": "100%"
+  }
+}
