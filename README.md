@@ -1,73 +1,208 @@
-# Welcome 
+# 🚨 Rapid Alert Nexus  
 
-## Project info
+**A Real-Time Disaster Intelligence & Emergency Response Coordination System**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This project demonstrates a real-time disaster monitoring and response platform built using modern web technologies and event-driven architecture. It simulates how emergency alerts can be processed, filtered, and handled efficiently with live coordination between response teams.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Project Overview
 
-**Use Lovable**
+Rapid Alert Nexus is designed to mimic a modern disaster management system where alerts are generated, processed through multiple stages, and converted into actionable dispatches.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Key Highlights:
+- Real-time communication using WebSockets  
+- Multi-stage alert processing pipeline  
+- Live response coordination system  
+- Persistent logging and monitoring  
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🛠️ Technologies Used
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 💻 Web Application
+- **Frontend**: React (TypeScript), Vite  
+- **Styling**: Tailwind CSS, shadcn/ui  
+- **Routing**: React Router  
+- **Visualization**: Leaflet (Maps), Recharts  
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### ⚙️ Backend
+- **Runtime**: Node.js  
+- **Framework**: Express.js  
+- **Real-Time Communication**: Socket.IO  
 
-Follow these steps:
+### 🧪 Testing
+- Vitest  
+- Playwright  
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🏗️ System Architecture
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 🔁 Workflow Summary
+1. Alert is generated (simulated disaster data)
+2. Data passes through filtering pipeline
+3. Valid alerts are processed and dispatched
+4. Response teams update status via console
+5. WebSocket syncs updates in real-time
+6. Logs and history are stored for tracking
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 📁 Project Structure
+```text
+Rapid-Alert-Nexus/
+│
+├── backend/
+│   ├── package.json
+│   ├── server.js
+│   └── data/
+│       ├── db.json
+│       ├── db2.json
+│       ├── db3.json
+│       └── db4.json
+│
+├── public/
+│   └── robots.txt
+│
+├── src/
+│   ├── components/
+│   │   ├── AlertHeatMap.tsx
+│   │   ├── DispatchReportDialog.tsx
+│   │   ├── NavLink.tsx
+│   │   ├── StatsPanel.tsx
+│   │   ├── TopNav.tsx
+│   │   ├── WebSocketStatus.tsx
+│   │   └── ui/
+│   ├── context/
+│   │   └── SimulationContext.tsx
+│   ├── hooks/
+│   │   ├── use-mobile.tsx
+│   │   ├── use-toast.ts
+│   │   └── useSocket.ts
+│   ├── lib/
+│   │   ├── simulation-data.ts
+│   │   └── utils.ts
+│   ├── pages/
+│   │   ├── DashboardPage.tsx
+│   │   ├── DataInputPage.tsx
+│   │   ├── DispatchHistoryPage.tsx
+│   │   ├── HomePage.tsx
+│   │   ├── ProcessingPage.tsx
+│   │   ├── RespondLoginPage.tsx
+│   │   └── ResponseConsolePage.tsx
+│   ├── test/
+│   └── types/
+│
+├── package.json
+├── vite.config.ts
+└── README.md
+```
+
+---
+
+## 🧪 Features
+- Real-time disaster alert simulation
+- Data filtering and processing pipeline
+- Interactive dashboard with heatmaps
+- Smart dispatch and response system
+- WebSocket-based live updates
+- Response console for emergency teams
+- Dispatch history with activity logs
+- System analytics and statistics
+
+---
+
+## ⚙️ Setup & Installation
+
+**1. Clone Repository**
+```bash
+git clone [https://github.com/amogh-sharanar28/Rapid-Alert-Nexus.git](https://github.com/amogh-sharanar28/Rapid-Alert-Nexus.git)
+cd Rapid-Alert-Nexus
+```
+
+**2. Install Dependencies**
+```bash
+npm install
+cd backend
+npm install
+cd ..
+```
+
+**3. Run Backend**
+```bash
+cd backend
+npm start
+```
+
+**4. Run Frontend**
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**5. Run Both Together (Optional)**
+```bash
+npm run dev:all
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 🔗 Application Access
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:4000
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 🔐 Response Console Access
+- **Password:** `respond123`
+- *Used to login into the Response Console page for team updates.*
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 📊 Data Management
+| File | Purpose |
+| :--- | :--- |
+| `db.json` | Alerts, dispatches, responses |
+| `db2.json` | Feedback filtering data |
+| `db3.json` | Processing logs |
+| `db4.json` | Login history |
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 🧰 Prerequisites
+- Node.js & npm installed
+- Basic understanding of React & Node.js
+- Browser with developer tools
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 🔄 Manual Testing Flow
+1. Start backend and frontend
+2. Generate alerts
+3. Create dispatch
+4. Submit team response
+5. Check dashboard updates
+6. Verify logs in history
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🚀 Future Enhancements
+- AI-based alert classification
+- Database integration (MongoDB/PostgreSQL)
+- Role-based authentication (JWT)
+- Docker-based deployment
+- Integration with real-world APIs
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## 👨‍💻 Author
+**Amogh Sharanar**  
+8th Semester CSE Student  
+KLE MSSCET, Belagavi  
+📧 amoghsharanar28@gmail.com  
+🌐 [GitHub Profile](https://github.com/amogh-sharanar28)  
+🔗 [LinkedIn Profile](https://linkedin.com/in/amogh-sharanar)  
+
+---
+
+## 📞 Contact
+Feel free to reach out for collaboration, improvements, or queries!  
+- **Email:** sharanaramogh@gmail.com  
+- **GitHub:** [amogh-sharanar28](https://github.com/amogh-sharanar28)  
+- **LinkedIn:** [Amogh Sharanar](https://linkedin.com/in/amogh-sharanar)
