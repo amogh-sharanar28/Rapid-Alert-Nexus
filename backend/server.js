@@ -99,6 +99,13 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// ── PING endpoint: measures real HTTP round-trip to this server ──────────
+// Frontend sends { sentAt: Date.now() }, server echoes it back immediately.
+// Frontend calculates RTT = Date.now() - sentAt on response.
+app.post('/api/ping', (req, res) => {
+  res.json({ sentAt: req.body.sentAt, serverTime: Date.now() });
+});
+
 app.get('/api/alerts', (req, res) => {
   res.json(db.alerts);
 });
