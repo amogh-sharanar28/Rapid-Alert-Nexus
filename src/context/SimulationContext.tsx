@@ -317,12 +317,38 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
 
     const tick = async () => {
       const tweet = generateTweet();
+      const tweetLang = (tweet as any).lang || 'en';
+
+      // ── Translate non-English tweets before edge filtering ──
+      let contentForProcessing = tweet.text;
+      let translatedContent: string | undefined;
+      let detectedLanguage: string | undefined;
+
+      if (tweetLang !== 'en') {
+        try {
+          const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(tweet.text)}`;
+          const res = await fetch(url);
+          const data = await res.json();
+          const translated = data[0]?.map((d: any) => d[0]).join('') || tweet.text;
+          const detected = data[2] || tweetLang;
+          if (detected !== 'en' && translated !== tweet.text) {
+            contentForProcessing = translated;
+            translatedContent = translated;
+            detectedLanguage = detected;
+          }
+        } catch {
+          // fail-safe: if translation fails, use original (pipeline continues)
+        }
+      }
+
       const feedItem: FeedItem = {
         id: tweet.id,
         type: 'tweet',
         content: tweet.text,
         timestamp: tweet.timestamp,
         location: tweet.location,
+        translatedContent,
+        detectedLanguage,
       };
       setFeedItems(prev => [feedItem, ...prev].slice(0, 50));
       try {
@@ -335,7 +361,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         console.warn('Failed to save tweet to DB3:', error);
       }
 
-      processData(tweet.id, 'tweet', tweet.text, tweet.location || 'Unknown Location');
+      processData(tweet.id, 'tweet', contentForProcessing, tweet.location || 'Unknown Location');
     };
 
     tick();

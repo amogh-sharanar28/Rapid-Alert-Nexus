@@ -150,6 +150,41 @@ const RANDOM_TWEETS = [
   "Just finished a good book 📖",
 ];
 
+// Multilingual disaster tweets for Indian languages
+const MULTILINGUAL_DISASTER_TWEETS: Array<{ text: string; location: string; lang: string }> = [
+  // Hindi
+  { text: "इमारत में भीषण आग लग गई है! लोग फंसे हैं, तुरंत मदद चाहिए #emergency", location: "Lucknow Old City, Lucknow", lang: "hi" },
+  { text: "बाढ़ का पानी तेजी से बढ़ रहा है, सड़कें डूब गई हैं! #बाढ़", location: "New Delhi, New Delhi", lang: "hi" },
+  { text: "भूकंप के तेज झटके महसूस हुए, कई इमारतें हिल गईं #earthquake", location: "Jaipur Civil Lines, Jaipur", lang: "hi" },
+  { text: "गैस रिसाव हो रहा है, पूरे इलाके को खाली करवाया जा रहा है!", location: "Noida Downtown, Noida", lang: "hi" },
+  // Tamil
+  { text: "கட்டிடத்தில் பெரும் தீ விபத்து! மக்கள் சிக்கித் தவிக்கின்றனர் #Chennai", location: "Chennai Beach Road, Chennai", lang: "ta" },
+  { text: "வெள்ளம் வேகமாக உயர்கிறது, சாலைகள் மூழ்கிவிட்டன #TamilNadu", location: "Tiruchirappalli Downtown, Tiruchirappalli", lang: "ta" },
+  { text: "நிலநடுக்கம்! பல கட்டிடங்கள் சேதமடைந்தன, உதவி தேவை", location: "Coimbatore Industrial, Coimbatore", lang: "ta" },
+  // Telugu
+  { text: "కర్మాగారంలో పేలుడు జరిగింది, అనేకమంది గాయపడ్డారు #emergency", location: "Hyderabad IT Corridor, Hyderabad", lang: "te" },
+  { text: "వరదలు వస్తున్నాయి, గ్రామాలు ముంపు ప్రమాదంలో ఉన్నాయి!", location: "Vijayawada Downtown, Vijayawada", lang: "te" },
+  { text: "భూకంప తీవ్రత అనుభవమైంది, భవనాలు దెబ్బతిన్నాయి #rescue", location: "Visakhapatnam Port, Visakhapatnam", lang: "te" },
+  // Bengali
+  { text: "আগুন লেগেছে বহুতল বাড়িতে, অনেকে আটকে আছেন! #Kolkata", location: "Kolkata Downtown, Kolkata", lang: "bn" },
+  { text: "বন্যার জল দ্রুত বাড়ছে, রাস্তাঘাট ডুবে গেছে #flood", location: "Guwahati Downtown, Guwahati", lang: "bn" },
+  { text: "ভূমিকম্পের ঝাঁকুনি অনুভব হয়েছে, বাড়িঘর ভেঙে পড়েছে", location: "Kolkata Downtown, Kolkata", lang: "bn" },
+  // Marathi
+  { text: "इमारतीला भीषण आग लागली आहे! अनेक जण अडकले आहेत #Mumbai", location: "Mumbai Downtown, Mumbai", lang: "mr" },
+  { text: "पूर परिस्थिती गंभीर, नागरिकांना सुरक्षित स्थळी हलवा #flood", location: "Pune IT Park, Pune", lang: "mr" },
+  // Kannada
+  { text: "ಕಟ್ಟಡದಲ್ಲಿ ಬೆಂಕಿ ಹೊತ್ತಿಕೊಂಡಿದೆ! ಜನರು ಸಿಕ್ಕಿಹಾಕಿಕೊಂಡಿದ್ದಾರೆ #Bangalore", location: "Bangalore IT Hub, Bangalore", lang: "kn" },
+  { text: "ಪ್ರವಾಹ ನೀರು ವೇಗವಾಗಿ ಏರುತ್ತಿದೆ, ರಸ್ತೆಗಳು ಮುಳುಗಿವೆ #Karnataka", location: "Mysore Palace Area, Mysore", lang: "kn" },
+  // Malayalam
+  { text: "കെട്ടിടത്തിൽ തീ പിടിച്ചു! ആളുകൾ കുടുങ്ങിക്കിടക്കുന്നു #Kerala", location: "Kochi Port Area, Kochi", lang: "ml" },
+  { text: "വെള്ളപ്പൊക്കം രൂക്ഷമാകുന്നു, റോഡുകൾ മുങ്ങിത്തോർത്തു #flood", location: "Thiruvananthapuram Downtown, Thiruvananthapuram", lang: "ml" },
+  // Gujarati
+  { text: "ઇમારતમાં ભીષણ આગ! લોકો ફસાઈ ગયા છે, તાત્કાલિક મદદ જોઈએ", location: "Ahmedabad City, Ahmedabad", lang: "gu" },
+  { text: "પૂર ઝડપથી વધી રહ્યું છે, ઘણા વિસ્તારો ડૂબી ગયા #Gujarat", location: "Surat Diamond Market, Surat", lang: "gu" },
+  // Punjabi
+  { text: "ਇਮਾਰਤ ਵਿੱਚ ਅੱਗ ਲੱਗ ਗਈ ਹੈ! ਲੋਕ ਫਸੇ ਹੋਏ ਹਨ, ਮਦਦ ਕਰੋ #Punjab", location: "Chandigarh Sector 22, Chandigarh", lang: "pa" },
+];
+
 // Generate realistic varied tweets based on location disaster vulnerabilities
 function generateRealisticTweets(): Array<{ text: string; location: string; type: IncidentType }> {
   return LOCATIONS.flatMap(loc => {
@@ -196,10 +231,10 @@ const PRIORITY_MAP: Record<IncidentType, Priority> = {
 let tweetIndex = 0;
 
 export function generateTweet(): SimulatedTweet {
-  // 70% chance of emergency tweet, 30% chance of random tweet (for feedback history)
-  const isRandomTweet = Math.random() < 0.3;
-  
-  if (isRandomTweet) {
+  const roll = Math.random();
+
+  if (roll < 0.30) {
+    // 30% — non-emergency noise tweet
     const randomText = RANDOM_TWEETS[Math.floor(Math.random() * RANDOM_TWEETS.length)];
     const randomLocation = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
     return {
@@ -210,7 +245,22 @@ export function generateTweet(): SimulatedTweet {
       location: `${randomLocation.area}, ${randomLocation.city}`,
       isRandom: true,
     } as any;
+
+  } else if (roll < 0.50) {
+    // 20% — multilingual disaster tweet
+    const ml = MULTILINGUAL_DISASTER_TWEETS[Math.floor(Math.random() * MULTILINGUAL_DISASTER_TWEETS.length)];
+    return {
+      id: `tweet-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      text: ml.text,
+      author: AUTHORS[Math.floor(Math.random() * AUTHORS.length)],
+      timestamp: new Date(),
+      location: ml.location,
+      isRandom: false,
+      lang: ml.lang,
+    } as any;
+
   } else {
+    // 50% — English disaster tweet
     const template = DISASTER_TWEETS[tweetIndex % DISASTER_TWEETS.length];
     tweetIndex++;
     return {
@@ -220,6 +270,7 @@ export function generateTweet(): SimulatedTweet {
       timestamp: new Date(),
       location: template.location,
       isRandom: false,
+      lang: 'en',
     } as any;
   }
 }

@@ -29,6 +29,14 @@ const FeedItemCard = React.memo(function FeedItemCard({ item }: { item: FeedItem
             </div>
           )}
           <p className="text-sm text-foreground leading-relaxed">{item.content}</p>
+          {item.translatedContent && (
+            <div className="mt-1.5 pl-2 border-l-2 border-purple-400/40">
+              <span className="text-xs text-purple-400 font-semibold uppercase tracking-wide">
+                🌐 {item.detectedLanguage?.toUpperCase()} → EN
+              </span>
+              <p className="text-xs text-muted-foreground mt-0.5 italic">"{item.translatedContent}"</p>
+            </div>
+          )}
           <p className="text-xs text-muted-foreground mt-1.5 font-mono">
             {typeof item.timestamp === 'string' ? new Date(item.timestamp).toLocaleTimeString() : item.timestamp.toLocaleTimeString()}
           </p>

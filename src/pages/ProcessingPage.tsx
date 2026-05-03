@@ -501,7 +501,7 @@ export default function ProcessingPage() {
             <div className="mt-6 pt-5 border-t border-border/40">
               <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  4G vs 5G — Your Project's Actual Numbers
+                  4G vs 5G — Comparison based on recorded events
                 </span>
                 <div className="flex items-center gap-3">
                   {speedup && (

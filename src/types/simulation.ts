@@ -52,6 +52,8 @@ export interface FeedItem {
   content: string;
   timestamp: Date;
   location?: string;
+  translatedContent?: string;
+  detectedLanguage?: string;
 }
 
 export interface CoordinationNote {
