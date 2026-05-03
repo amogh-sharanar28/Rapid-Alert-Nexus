@@ -17,6 +17,20 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
+// ← Helper function: Convert TeamResponse currentStatus to CoordinationStatus
+function getCoordinationStatus(teamResponseStatus: TeamResponse['currentStatus']): CoordinationStatus {
+  switch (teamResponseStatus) {
+    case 'resolved':
+      return 'completed';
+    case 'en_route':
+    case 'on_scene':
+    case 'need_backup':
+      return 'in_progress';
+    default:
+      return 'in_progress';
+  }
+}
+
 const ROLE_OPTIONS: { value: ResponderRole; label: string; icon: React.ElementType }[] = [
   { value: 'fire_department', label: 'Fire Department', icon: Flame },
   { value: 'flood_rescue',    label: 'Flood Rescue',    icon: Droplets },
@@ -39,6 +53,13 @@ const statusColors: Record<CoordinationStatus, string> = {
   not_started: 'bg-muted text-muted-foreground',
   in_progress: 'bg-warning/20 text-warning',
   completed:   'bg-success/20 text-success',
+};
+
+const statusDescriptions: Record<TeamResponse['currentStatus'], string> = {
+  en_route: 'en route to scene',
+  on_scene: 'arrived on scene',
+  resolved: 'rescued victims and resolved incident',
+  need_backup: 'requesting additional backup',
 };
 
 const STATUS_STEPS: {
@@ -341,9 +362,12 @@ function DispatchCard({ report, activeRole, onRespond, existingResponse, onUpdat
               <span className="font-mono text-[10px] text-muted-foreground">{new Date(existingResponse.timestamp).toLocaleTimeString()}</span>
             </div>
             <p><span className="text-muted-foreground">Leader:</span> <span className="font-medium">{existingResponse.teamLeader}</span> · {existingResponse.teamSize} personnel</p>
-            <p><span className="text-muted-foreground">ETA:</span> <span className="font-medium">{existingResponse.eta}</span> · <span className="text-muted-foreground">Status:</span> <span className="font-medium capitalize">{existingResponse.currentStatus.replace('_', ' ')}</span></p>
+            <p><span className="text-muted-foreground">ETA:</span> <span className="font-medium">{existingResponse.eta}</span> · <span className="text-muted-foreground">Status:</span> <span className="font-medium capitalize text-warning">{statusDescriptions[existingResponse.currentStatus] || existingResponse.currentStatus.replace('_', ' ')}</span></p>
+            <p><span className="text-muted-foreground">Equipment:</span> <span className="font-medium">{existingResponse.equipmentDeployed}</span></p>
+            <p><span className="text-muted-foreground">Hazards:</span> <span className="font-medium">{existingResponse.hazards}</span></p>
+            <p><span className="text-muted-foreground">Access Route:</span> <span className="font-medium">{existingResponse.accessRoute}</span></p>
             <p><span className="text-muted-foreground">Casualties:</span> {existingResponse.casualties} · <span className="text-muted-foreground">Rescued:</span> {existingResponse.rescued}</p>
-            <p className="text-muted-foreground">{existingResponse.situationUpdate}</p>
+            <p className="text-muted-foreground italic">{existingResponse.situationUpdate}</p>
           </div>
 
           {/* Status buttons */}
@@ -421,7 +445,7 @@ export default function ResponseConsolePage() {
   const handleFirstResponse = (response: TeamResponse) => {
     addTeamResponse(response);
     setLocalResponses(prev => [...prev, response]);
-    if (activeRole) updateTeamStatus(response.dispatchReportId, activeRole, 'in_progress');
+    if (activeRole) updateTeamStatus(response.dispatchReportId, activeRole, getCoordinationStatus(response.currentStatus), response.situationUpdate);
     saveResponseToBackend(response); // → WebSocket → /history live update
     toast.success(`Response submitted by ${response.teamLeader}`);
   };
@@ -432,7 +456,7 @@ export default function ResponseConsolePage() {
       if (idx >= 0) { const next = [...prev]; next[idx] = updated; return next; }
       return [...prev, updated];
     });
-    if (activeRole) updateTeamStatus(updated.dispatchReportId, activeRole, updated.currentStatus === 'resolved' ? 'completed' : 'in_progress');
+    if (activeRole) updateTeamStatus(updated.dispatchReportId, activeRole, getCoordinationStatus(updated.currentStatus), updated.situationUpdate);
     saveResponseToBackend(updated); // → WebSocket → /history live update
     toast.success('Response updated — History page updated live');
   };

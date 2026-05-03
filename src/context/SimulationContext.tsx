@@ -3,6 +3,37 @@ import { Alert, ProcessingLog, FeedItem, ResponderRole, DispatchReport, TeamResp
 import { generateTweet, classifyTweet, generateProcessingLogs, createAlert } from '@/lib/simulation-data';
 import { useSocket } from '@/hooks/useSocket';
 
+// ← Helper function: Convert TeamResponse currentStatus to CoordinationStatus
+function getCoordinationStatus(teamResponseStatus: TeamResponse['currentStatus']): CoordinationStatus {
+  switch (teamResponseStatus) {
+    case 'resolved':
+      return 'completed';
+    case 'en_route':
+    case 'on_scene':
+    case 'need_backup':
+      return 'in_progress';
+    default:
+      return 'in_progress';
+  }
+}
+
+// ← Helper function: Apply responses to dispatches to update team assignment statuses
+function applyResponsesToDispatches(dispatches: DispatchReport[], responses: TeamResponse[]): DispatchReport[] {
+  return dispatches.map(dispatch => {
+    const dispatchResponses = responses.filter(r => r.dispatchReportId === dispatch.id);
+    if (dispatchResponses.length === 0) return dispatch;
+
+    const updatedAssignments = dispatch.teamAssignments.map(ta => {
+      const response = dispatchResponses.find(r => r.respondingRole === ta.role);
+      if (!response) return ta;
+      return { ...ta, status: getCoordinationStatus(response.currentStatus), updatedAt: new Date(response.timestamp) };
+    });
+
+    const allDone = updatedAssignments.every(ta => ta.status === 'completed');
+    return { ...dispatch, teamAssignments: updatedAssignments, status: allDone ? 'resolved' as const : 'acknowledged' as const };
+  });
+}
+
 interface SimulationState {
   alerts: Alert[];
   processingLogs: ProcessingLog[];
@@ -20,7 +51,7 @@ interface SimulationState {
   teamResponses: TeamResponse[];
   addTeamResponse: (response: TeamResponse) => void;
   dispatchLogs: DispatchLogEntry[];
-  updateTeamStatus: (dispatchId: string, role: ResponderRole, status: CoordinationStatus) => void;
+  updateTeamStatus: (dispatchId: string, role: ResponderRole, status: CoordinationStatus, description?: string) => void;
   addCoordinationNote: (dispatchId: string, role: ResponderRole, author: string, text: string) => void;
 }
 
@@ -70,12 +101,13 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         // setAlerts(alertsData.slice(0, 50));
         // setProcessingLogs(logsData.slice(0, 100));
 
-        const [feedRes, alertsRes, logsRes, dispatchRes, responsesRes] = await Promise.all([
+        const [feedRes, alertsRes, logsRes, dispatchRes, responsesRes, dispatchLogsRes] = await Promise.all([
           fetch('http://localhost:4000/api/feed'),
           fetch('http://localhost:4000/api/alerts'),
           fetch('http://localhost:4000/api/logs'),
           fetch('http://localhost:4000/api/dispatches'),
           fetch('http://localhost:4000/api/responses'),
+          fetch('http://localhost:4000/api/dispatch-logs'),
         ]);
 
         const feedJson      = await feedRes.json();
@@ -83,18 +115,25 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         const logsJson      = await logsRes.json();
         const dispatchJson  = await dispatchRes.json();
         const responsesJson = await responsesRes.json();
+        const dispatchLogsJson = await dispatchLogsRes.json();
 
         const feedData      = Array.isArray(feedJson)      ? feedJson      : feedJson.data      || [];
         const alertsData    = Array.isArray(alertsJson)    ? alertsJson    : alertsJson.data    || [];
         const logsData      = Array.isArray(logsJson)      ? logsJson      : logsJson.data      || [];
         const dispatchData  = Array.isArray(dispatchJson)  ? dispatchJson  : dispatchJson.data  || [];
         const responsesData = Array.isArray(responsesJson) ? responsesJson : responsesJson.data || [];
+        const dispatchLogsData = Array.isArray(dispatchLogsJson) ? dispatchLogsJson : dispatchLogsJson.data || [];
 
         setFeedItems(feedData.slice(0, 50));
         setAlerts(alertsData.slice(0, 50));
         setProcessingLogs(logsData.slice(0, 100));
-        setDispatchedReports(dispatchData);
+        
+        // ← Apply responses to dispatches to update team statuses
+        const dispatchesWithResponses = applyResponsesToDispatches(dispatchData, responsesData);
+        setDispatchedReports(dispatchesWithResponses);
+        
         setTeamResponses(responsesData);
+        setDispatchLogs(dispatchLogsData);
       } catch (err) {
         console.error("❌ Error loading initial data:", err);
       } finally {
@@ -134,6 +173,42 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         return [data.log, ...prev].slice(0, 100);
       });
     }, []),
+
+
+    onTeamResponseUpdate: useCallback((response: TeamResponse) => {
+      console.log('🔔 Team response received via WebSocket:', response.respondingRole, response.currentStatus);
+      setTeamResponses(prev => {
+        const idx = prev.findIndex(r =>
+          r.dispatchReportId === response.dispatchReportId && r.respondingRole === response.respondingRole
+        );
+        if (idx >= 0) {
+          const next = [...prev];
+          next[idx] = response;
+          return next;
+        }
+        return [response, ...prev];
+      });
+      setDispatchedReports(prev => prev.map(r => {
+        if (r.id !== response.dispatchReportId) return r;
+        const updatedAssignments = r.teamAssignments.map(ta =>
+          ta.role === response.respondingRole
+            ? { ...ta, status: getCoordinationStatus(response.currentStatus), updatedAt: new Date() }
+            : ta
+        );
+        const allDone = updatedAssignments.every(ta => ta.status === 'completed');
+        return { ...r, teamAssignments: updatedAssignments, status: allDone ? 'resolved' as const : 'acknowledged' as const };
+      }));
+    }, []),
+
+    onDispatchLogUpdate: useCallback((log: DispatchLogEntry) => {
+      console.log('🔔 Dispatch log received via WebSocket:', log.id, log.action);
+      setDispatchLogs(prev => {
+        if (prev.some(l => l.id === log.id)) {
+          return prev;
+        }
+        return [log, ...prev];
+      });
+    }, []),
   });
 
   const addLogEntry = useCallback((dispatchId: string, action: DispatchLogEntry['action'], details: string, role?: ResponderRole) => {
@@ -146,6 +221,12 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
       timestamp: new Date(),
     };
     setDispatchLogs(prev => [entry, ...prev]);
+    // Save to backend
+    fetch('http://localhost:4000/api/dispatch-logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+    }).catch(err => console.warn('Failed to save dispatch log:', err));
   }, []);
 
   const processData = useCallback((sourceId: string, sourceType: 'tweet' | 'image' | 'manual_report', content: string, location: string) => {
@@ -283,12 +364,26 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     processData(id, 'image', description, location);
   }, [processData]);
 
+  // const addDispatchReport = useCallback((report: DispatchReport) => {
+  //   setDispatchedReports(prev => [report, ...prev]);
+  //   addLogEntry(report.id, 'created', `Dispatch created: ${report.criticality} ${report.incidentType} at ${report.location}`);
+  //   report.assignedRoles.forEach(role => {
+  //     addLogEntry(report.id, 'team_assigned', `${role.replace('_', ' ')} assigned`, role);
+  //   });
+  // }, [addLogEntry]);
+
   const addDispatchReport = useCallback((report: DispatchReport) => {
     setDispatchedReports(prev => [report, ...prev]);
     addLogEntry(report.id, 'created', `Dispatch created: ${report.criticality} ${report.incidentType} at ${report.location}`);
     report.assignedRoles.forEach(role => {
       addLogEntry(report.id, 'team_assigned', `${role.replace('_', ' ')} assigned`, role);
     });
+    // Save to backend so /respond page can load it
+    fetch('http://localhost:4000/api/dispatches', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(report),
+    }).catch(err => console.warn('Failed to save dispatch:', err));
   }, [addLogEntry]);
 
   const addTeamResponse = useCallback((response: TeamResponse) => {
@@ -297,9 +392,15 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
       r.id === response.dispatchReportId ? { ...r, status: 'acknowledged' as const } : r
     ));
     addLogEntry(response.dispatchReportId, 'status_update', `${response.respondingRole.replace('_', ' ')} responded — ${response.currentStatus.replace('_', ' ')}`, response.respondingRole);
+    // ← POST to backend so WebSocket fires and history page updates live
+    fetch('http://localhost:4000/api/responses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(response),
+    }).catch(err => console.warn('Failed to save response:', err));
   }, [addLogEntry]);
 
-  const updateTeamStatus = useCallback((dispatchId: string, role: ResponderRole, status: CoordinationStatus) => {
+  const updateTeamStatus = useCallback((dispatchId: string, role: ResponderRole, status: CoordinationStatus, description?: string) => {
     setDispatchedReports(prev => prev.map(r => {
       if (r.id !== dispatchId) return r;
       const updatedAssignments = r.teamAssignments.map(ta =>
@@ -308,7 +409,9 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
       const allCompleted = updatedAssignments.every(ta => ta.status === 'completed');
       return { ...r, teamAssignments: updatedAssignments, status: allCompleted ? 'resolved' as const : r.status };
     }));
-    addLogEntry(dispatchId, 'status_update', `${role.replace('_', ' ')} → ${status.replace('_', ' ')}`, role);
+    // ← Use provided description, otherwise use status change as default
+    const logDetails = description || `${role.replace('_', ' ')} → ${status.replace('_', ' ')}`;
+    addLogEntry(dispatchId, 'status_update', logDetails, role);
   }, [addLogEntry]);
 
   const addCoordinationNote = useCallback((dispatchId: string, role: ResponderRole, author: string, text: string) => {

@@ -1,6 +1,60 @@
 {
   "alerts": [
     {
+      "id": "alert-1777788269397-7kfc",
+      "priority": "MEDIUM",
+      "incidentType": "infrastructure",
+      "location": "Connaught Place, New Delhi",
+      "description": "🔌 INFRASTRUCTURE DAMAGED in Connaught Place, New Delhi! Power lines down and roads blocked! #emergency",
+      "timestamp": "2026-05-03T06:04:29.397Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777788269381-36q5",
+      "responderRoles": [
+        "all",
+        "police"
+      ]
+    },
+    {
+      "id": "alert-1777788266296-6060",
+      "priority": "HIGH",
+      "incidentType": "flood",
+      "location": "New Delhi, New Delhi",
+      "description": "🌊 FLOOD ALERT in New Delhi, New Delhi! Massive flooding reported! Water levels rising fast. #emergency",
+      "timestamp": "2026-05-03T06:04:26.296Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777788266287-qmlv",
+      "responderRoles": [
+        "all",
+        "flood_rescue"
+      ]
+    },
+    {
+      "id": "alert-1777788263257-jhe7",
+      "priority": "HIGH",
+      "incidentType": "fire",
+      "location": "New Delhi, New Delhi",
+      "description": "🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! Building engulfed in flames. #emergency",
+      "timestamp": "2026-05-03T06:04:23.257Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777788263188-g925",
+      "responderRoles": [
+        "all",
+        "fire_department"
+      ]
+    },
+    {
       "id": "alert-1777781086368-ceck",
       "priority": "HIGH",
       "incidentType": "medical",
@@ -796,6 +850,27 @@
   ],
   "feed": [
     {
+      "id": "tweet-1777788269381-36q5",
+      "type": "tweet",
+      "content": "🔌 INFRASTRUCTURE DAMAGED in Connaught Place, New Delhi! Power lines down and roads blocked! #emergency",
+      "timestamp": "2026-05-03T06:04:29.381Z",
+      "location": "Connaught Place, New Delhi"
+    },
+    {
+      "id": "tweet-1777788266287-qmlv",
+      "type": "tweet",
+      "content": "🌊 FLOOD ALERT in New Delhi, New Delhi! Massive flooding reported! Water levels rising fast. #emergency",
+      "timestamp": "2026-05-03T06:04:26.287Z",
+      "location": "New Delhi, New Delhi"
+    },
+    {
+      "id": "tweet-1777788263188-g925",
+      "type": "tweet",
+      "content": "🔥 FIRE ALERT in New Delhi, New Delhi! Major fire outbreak! Building engulfed in flames. #emergency",
+      "timestamp": "2026-05-03T06:04:23.188Z",
+      "location": "New Delhi, New Delhi"
+    },
+    {
       "id": "tweet-1777781086349-9j2i",
       "type": "tweet",
       "content": "🏥 MEDICAL EMERGENCY in Connaught Place, New Delhi! Multiple casualties reported! #emergency",
@@ -968,5 +1043,259 @@
       "result": "Disaster-related content detected at Visakhapatnam Port, Visakhapatnam. Forwarding to AI module."
     }
   ],
-  "dispatches": []
+  "dispatches": [
+    {
+      "id": "dispatch-1777794966993",
+      "alertId": "alert-1777788263257-jhe7",
+      "criticality": "HIGH",
+      "peopleAffected": 25,
+      "location": "New Delhi, New Delhi",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "incidentType": "fire",
+      "assignedRoles": [
+        "flood_rescue"
+      ],
+      "teamAssignments": [
+        {
+          "role": "flood_rescue",
+          "status": "not_started",
+          "updatedAt": "2026-05-03T07:56:06.993Z"
+        }
+      ],
+      "notes": "flood emeregency",
+      "contactInfo": "7760608291",
+      "resourcesNeeded": "4 trucks and 10 Ambulences",
+      "timestamp": "2026-05-03T07:56:06.993Z",
+      "status": "dispatched",
+      "coordinationNotes": []
+    },
+    {
+      "id": "dispatch-1777794446448",
+      "alertId": "alert-1777788269397-7kfc",
+      "criticality": "MEDIUM",
+      "peopleAffected": 10,
+      "location": "Connaught Place, New Delhi",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "incidentType": "infrastructure",
+      "assignedRoles": [
+        "medical",
+        "police"
+      ],
+      "teamAssignments": [
+        {
+          "role": "medical",
+          "status": "not_started",
+          "updatedAt": "2026-05-03T07:47:26.448Z"
+        },
+        {
+          "role": "police",
+          "status": "not_started",
+          "updatedAt": "2026-05-03T07:47:26.448Z"
+        }
+      ],
+      "notes": "Medical Emergency",
+      "contactInfo": "7760608291",
+      "resourcesNeeded": "8 Ambulence",
+      "timestamp": "2026-05-03T07:47:26.448Z",
+      "status": "dispatched",
+      "coordinationNotes": []
+    },
+    {
+      "id": "dispatch-1777784769687",
+      "alertId": "alert-1777781086368-ceck",
+      "criticality": "HIGH",
+      "peopleAffected": 10,
+      "location": "Connaught Place, New Delhi",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "incidentType": "medical",
+      "assignedRoles": [
+        "medical",
+        "police"
+      ],
+      "teamAssignments": [
+        {
+          "role": "medical",
+          "status": "not_started",
+          "updatedAt": "2026-05-03T05:06:09.687Z"
+        },
+        {
+          "role": "police",
+          "status": "not_started",
+          "updatedAt": "2026-05-03T05:06:09.687Z"
+        }
+      ],
+      "notes": "Emergency",
+      "contactInfo": "7760608291",
+      "resourcesNeeded": "5 Ambulences",
+      "timestamp": "2026-05-03T05:06:09.687Z",
+      "status": "dispatched",
+      "coordinationNotes": []
+    }
+  ],
+  "responses": [
+    {
+      "id": "response-1777795022202",
+      "dispatchReportId": "dispatch-1777794966993",
+      "alertId": "alert-1777788263257-jhe7",
+      "respondingRole": "flood_rescue",
+      "teamLeader": "Amogh",
+      "teamSize": 50,
+      "eta": "10",
+      "equipmentDeployed": "4 trucks and 8 Ambluneces",
+      "currentStatus": "need_backup",
+      "situationUpdate": "need more backup",
+      "casualties": 10,
+      "rescued": 0,
+      "hazards": "Flood",
+      "accessRoute": "New Delhi",
+      "timestamp": "2026-05-03T08:01:15.986Z"
+    },
+    {
+      "id": "response-1777794556700",
+      "dispatchReportId": "dispatch-1777784769687",
+      "alertId": "alert-1777781086368-ceck",
+      "respondingRole": "police",
+      "teamLeader": "Supreet",
+      "teamSize": 20,
+      "eta": "15",
+      "equipmentDeployed": "4 Ambulenece",
+      "currentStatus": "on_scene",
+      "situationUpdate": "reached the area",
+      "casualties": 2,
+      "rescued": 0,
+      "hazards": "Medical EMeregency",
+      "accessRoute": "Connaught Place , New Delhi",
+      "timestamp": "2026-05-03T07:50:24.843Z"
+    },
+    {
+      "id": "response-1777784949170",
+      "dispatchReportId": "dispatch-1777784769687",
+      "alertId": "alert-1777781086368-ceck",
+      "respondingRole": "medical",
+      "teamLeader": "Amogh",
+      "teamSize": 10,
+      "eta": "15",
+      "equipmentDeployed": "4 Ambulences",
+      "currentStatus": "on_scene",
+      "situationUpdate": "reached the place",
+      "casualties": 2,
+      "rescued": 0,
+      "hazards": "Medical emregency",
+      "accessRoute": "Connaught place, New Delhi",
+      "timestamp": "2026-05-03T06:15:36.467Z"
+    }
+  ],
+  "dispatchLogs": [
+    {
+      "id": "log-1777795275986-ymvt",
+      "dispatchId": "dispatch-1777794966993",
+      "action": "status_update",
+      "details": "need more backup",
+      "role": "flood_rescue",
+      "timestamp": "2026-05-03T08:01:15.986Z"
+    },
+    {
+      "id": "log-1777795078683-hdc4",
+      "dispatchId": "dispatch-1777794966993",
+      "action": "status_update",
+      "details": "flood rescue → completed",
+      "role": "flood_rescue",
+      "timestamp": "2026-05-03T07:57:58.683Z"
+    },
+    {
+      "id": "log-1777795051626-wmyp",
+      "dispatchId": "dispatch-1777794966993",
+      "action": "status_update",
+      "details": "flood rescue → in progress",
+      "role": "flood_rescue",
+      "timestamp": "2026-05-03T07:57:31.626Z"
+    },
+    {
+      "id": "log-1777795022203-xn6u",
+      "dispatchId": "dispatch-1777794966993",
+      "action": "status_update",
+      "details": "flood rescue → in progress",
+      "role": "flood_rescue",
+      "timestamp": "2026-05-03T07:57:02.203Z"
+    },
+    {
+      "id": "log-1777795022202-q5xj",
+      "dispatchId": "dispatch-1777794966993",
+      "action": "status_update",
+      "details": "flood rescue responded — en route",
+      "role": "flood_rescue",
+      "timestamp": "2026-05-03T07:57:02.202Z"
+    },
+    {
+      "id": "log-1777794966994-d0q8",
+      "dispatchId": "dispatch-1777794966993",
+      "action": "team_assigned",
+      "details": "flood rescue assigned",
+      "role": "flood_rescue",
+      "timestamp": "2026-05-03T07:56:06.994Z"
+    },
+    {
+      "id": "log-1777794966993-npji",
+      "dispatchId": "dispatch-1777794966993",
+      "action": "created",
+      "details": "Dispatch created: HIGH fire at New Delhi, New Delhi",
+      "timestamp": "2026-05-03T07:56:06.993Z"
+    },
+    {
+      "id": "log-1777794624843-0q4r",
+      "dispatchId": "dispatch-1777784769687",
+      "action": "status_update",
+      "details": "police → in progress",
+      "role": "police",
+      "timestamp": "2026-05-03T07:50:24.844Z"
+    },
+    {
+      "id": "log-1777794556701-gfq0",
+      "dispatchId": "dispatch-1777784769687",
+      "action": "status_update",
+      "details": "police → in progress",
+      "role": "police",
+      "timestamp": "2026-05-03T07:49:16.701Z"
+    },
+    {
+      "id": "log-1777794556700-xjgf",
+      "dispatchId": "dispatch-1777784769687",
+      "action": "status_update",
+      "details": "police responded — en route",
+      "role": "police",
+      "timestamp": "2026-05-03T07:49:16.700Z"
+    },
+    {
+      "id": "log-1777794446450-fk4j",
+      "dispatchId": "dispatch-1777794446448",
+      "action": "team_assigned",
+      "details": "police assigned",
+      "role": "police",
+      "timestamp": "2026-05-03T07:47:26.450Z"
+    },
+    {
+      "id": "log-1777794446449-pcrh",
+      "dispatchId": "dispatch-1777794446448",
+      "action": "team_assigned",
+      "details": "medical assigned",
+      "role": "medical",
+      "timestamp": "2026-05-03T07:47:26.449Z"
+    },
+    {
+      "id": "log-1777794446449-9q39",
+      "dispatchId": "dispatch-1777794446448",
+      "action": "created",
+      "details": "Dispatch created: MEDIUM infrastructure at Connaught Place, New Delhi",
+      "timestamp": "2026-05-03T07:47:26.449Z"
+    }
+  ]
 }

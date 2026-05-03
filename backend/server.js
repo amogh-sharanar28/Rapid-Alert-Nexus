@@ -27,7 +27,7 @@ function saveData(dbPath, data) {
 }
 
 // Load all databases
-let db = loadData(DB_PATH) || { alerts: [], feed: [], logs: [], dispatches: [] };
+let db = loadData(DB_PATH) || { alerts: [], feed: [], logs: [], dispatches: [], responses: [], dispatchLogs: [] };
 let db2 = loadData(DB2_PATH) || { feedbackHistory: [], filteredSummary: { totalFiltered: 0, successfulFilter: 0 } };
 let db3 = loadData(DB3_PATH) || { processingLogs: [], logSummary: { totalProcessed: 0, successfulAlerts: 0, filteredOut: 0 } };
 let db4 = loadData(DB4_PATH) || { respondLogins: [] }; // ← NEW: login history
@@ -226,10 +226,26 @@ app.get('/api/responses', (req, res) => {
   res.json(db.responses || []);
 });
 
+// =================== DISPATCH LOGS ===================
+
+app.get('/api/dispatch-logs', (req, res) => {
+  res.json(db.dispatchLogs || []);
+});
+
+app.post('/api/dispatch-logs', (req, res) => {
+  const log = { ...req.body, timestamp: new Date(req.body.timestamp).toISOString() };
+  if (!db.dispatchLogs) db.dispatchLogs = [];
+  db.dispatchLogs.unshift(log);
+  saveData(DB_PATH, db);
+  console.log('EMITTING DISPATCH LOG:', log.id, log.action);
+  io.emit('dispatch_log_update', log);
+  res.status(201).json(log);
+});
+
 // =================== RESET ===================
 
 app.post('/api/reset', (req, res) => {
-  db = { alerts: [], feed: [], logs: [], dispatches: [], responses: [] };
+  db = { alerts: [], feed: [], logs: [], dispatches: [], responses: [], dispatchLogs: [] };
   db2 = { feedbackHistory: [], filteredSummary: { totalFiltered: 0, successfulFilter: 0, filterRate: '0%' } };
   db3 = { processingLogs: [], logSummary: { totalProcessed: 0, successfulAlerts: 0, filteredOut: 0 } };
   saveData(DB_PATH, db);
