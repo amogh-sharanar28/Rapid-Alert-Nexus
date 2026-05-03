@@ -1,6 +1,96 @@
 {
   "alerts": [
     {
+      "id": "alert-1777781086368-ceck",
+      "priority": "HIGH",
+      "incidentType": "medical",
+      "location": "Connaught Place, New Delhi",
+      "description": "🏥 MEDICAL EMERGENCY in Connaught Place, New Delhi! Multiple casualties reported! #emergency",
+      "timestamp": "2026-05-03T04:04:46.368Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777781086349-9j2i",
+      "responderRoles": [
+        "all",
+        "medical"
+      ]
+    },
+    {
+      "id": "alert-1777781081533-frce",
+      "priority": "MEDIUM",
+      "incidentType": "infrastructure",
+      "location": "Connaught Place, New Delhi",
+      "description": "🔌 INFRASTRUCTURE DAMAGED in Connaught Place, New Delhi! Power lines down and roads blocked! #emergency",
+      "timestamp": "2026-05-03T04:04:41.533Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777781081514-9av1",
+      "responderRoles": [
+        "all",
+        "police"
+      ]
+    },
+    {
+      "id": "alert-1777781076701-vjbu",
+      "priority": "HIGH",
+      "incidentType": "flood",
+      "location": "New Delhi, New Delhi",
+      "description": "🌊 FLOOD ALERT in New Delhi, New Delhi! Massive flooding reported! Water levels rising fast. #emergency",
+      "timestamp": "2026-05-03T04:04:36.701Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777781076662-hvp9",
+      "responderRoles": [
+        "all",
+        "flood_rescue"
+      ]
+    },
+    {
+      "id": "alert-1777384942736-t2u5",
+      "priority": "MEDIUM",
+      "incidentType": "infrastructure",
+      "location": "New Delhi, New Delhi",
+      "description": "🔌 INFRASTRUCTURE DAMAGED in New Delhi, New Delhi! Power lines down and roads blocked! #emergency",
+      "timestamp": "2026-04-28T14:02:22.736Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777384942718-wd3b",
+      "responderRoles": [
+        "all",
+        "police"
+      ]
+    },
+    {
+      "id": "alert-1777384939263-jqxo",
+      "priority": "HIGH",
+      "incidentType": "flood",
+      "location": "New Delhi, New Delhi",
+      "description": "🌊 FLOOD ALERT in New Delhi, New Delhi! Massive flooding reported! Water levels rising fast. #emergency",
+      "timestamp": "2026-04-28T14:02:19.263Z",
+      "coordinates": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "sourceType": "tweet",
+      "sourceId": "tweet-1777384939193-hk5m",
+      "responderRoles": [
+        "all",
+        "flood_rescue"
+      ]
+    },
+    {
       "id": "alert-1777377547893-zqif",
       "priority": "HIGH",
       "incidentType": "fire",
@@ -705,6 +795,41 @@
     }
   ],
   "feed": [
+    {
+      "id": "tweet-1777781086349-9j2i",
+      "type": "tweet",
+      "content": "🏥 MEDICAL EMERGENCY in Connaught Place, New Delhi! Multiple casualties reported! #emergency",
+      "timestamp": "2026-05-03T04:04:46.349Z",
+      "location": "Connaught Place, New Delhi"
+    },
+    {
+      "id": "tweet-1777781081514-9av1",
+      "type": "tweet",
+      "content": "🔌 INFRASTRUCTURE DAMAGED in Connaught Place, New Delhi! Power lines down and roads blocked! #emergency",
+      "timestamp": "2026-05-03T04:04:41.514Z",
+      "location": "Connaught Place, New Delhi"
+    },
+    {
+      "id": "tweet-1777781076662-hvp9",
+      "type": "tweet",
+      "content": "🌊 FLOOD ALERT in New Delhi, New Delhi! Massive flooding reported! Water levels rising fast. #emergency",
+      "timestamp": "2026-05-03T04:04:36.662Z",
+      "location": "New Delhi, New Delhi"
+    },
+    {
+      "id": "tweet-1777384942718-wd3b",
+      "type": "tweet",
+      "content": "🔌 INFRASTRUCTURE DAMAGED in New Delhi, New Delhi! Power lines down and roads blocked! #emergency",
+      "timestamp": "2026-04-28T14:02:22.719Z",
+      "location": "New Delhi, New Delhi"
+    },
+    {
+      "id": "tweet-1777384939193-hk5m",
+      "type": "tweet",
+      "content": "🌊 FLOOD ALERT in New Delhi, New Delhi! Massive flooding reported! Water levels rising fast. #emergency",
+      "timestamp": "2026-04-28T14:02:19.193Z",
+      "location": "New Delhi, New Delhi"
+    },
     {
       "id": "tweet-1777377553732-grhn",
       "type": "tweet",

@@ -42,33 +42,59 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const [feedRes, alertsRes, logsRes] = await Promise.all([
+        // const [feedRes, alertsRes, logsRes] = await Promise.all([
+        //   fetch('http://localhost:4000/api/feed'),
+        //   fetch('http://localhost:4000/api/alerts'),
+        //   fetch('http://localhost:4000/api/logs'),
+        // ]);
+        
+        // const feedJson = await feedRes.json();
+        // const alertsJson = await alertsRes.json();
+        // const logsJson = await logsRes.json();
+
+        // // ✅ Handle both array and object response
+        // const feedData = Array.isArray(feedJson) ? feedJson : feedJson.data || [];
+        // const alertsData = Array.isArray(alertsJson) ? alertsJson : alertsJson.data || [];
+        // const logsData = Array.isArray(logsJson) ? logsJson : logsJson.data || [];
+
+        // // ✅ DEBUG (important)
+        // console.log("📦 Feed API Response:", feedJson);
+        // console.log("📦 Alerts API Response:", alertsJson);
+        // console.log("📦 Logs API Response:", logsJson);
+
+        // console.log("✅ Parsed Feed:", feedData);
+        // console.log("✅ Parsed Alerts:", alertsData);
+        // console.log("✅ Parsed Logs:", logsData);
+
+        // setFeedItems(feedData.slice(0, 50));
+        // setAlerts(alertsData.slice(0, 50));
+        // setProcessingLogs(logsData.slice(0, 100));
+
+        const [feedRes, alertsRes, logsRes, dispatchRes, responsesRes] = await Promise.all([
           fetch('http://localhost:4000/api/feed'),
           fetch('http://localhost:4000/api/alerts'),
           fetch('http://localhost:4000/api/logs'),
+          fetch('http://localhost:4000/api/dispatches'),
+          fetch('http://localhost:4000/api/responses'),
         ]);
-        
-        const feedJson = await feedRes.json();
-        const alertsJson = await alertsRes.json();
-        const logsJson = await logsRes.json();
 
-        // ✅ Handle both array and object response
-        const feedData = Array.isArray(feedJson) ? feedJson : feedJson.data || [];
-        const alertsData = Array.isArray(alertsJson) ? alertsJson : alertsJson.data || [];
-        const logsData = Array.isArray(logsJson) ? logsJson : logsJson.data || [];
+        const feedJson      = await feedRes.json();
+        const alertsJson    = await alertsRes.json();
+        const logsJson      = await logsRes.json();
+        const dispatchJson  = await dispatchRes.json();
+        const responsesJson = await responsesRes.json();
 
-        // ✅ DEBUG (important)
-        console.log("📦 Feed API Response:", feedJson);
-        console.log("📦 Alerts API Response:", alertsJson);
-        console.log("📦 Logs API Response:", logsJson);
-
-        console.log("✅ Parsed Feed:", feedData);
-        console.log("✅ Parsed Alerts:", alertsData);
-        console.log("✅ Parsed Logs:", logsData);
+        const feedData      = Array.isArray(feedJson)      ? feedJson      : feedJson.data      || [];
+        const alertsData    = Array.isArray(alertsJson)    ? alertsJson    : alertsJson.data    || [];
+        const logsData      = Array.isArray(logsJson)      ? logsJson      : logsJson.data      || [];
+        const dispatchData  = Array.isArray(dispatchJson)  ? dispatchJson  : dispatchJson.data  || [];
+        const responsesData = Array.isArray(responsesJson) ? responsesJson : responsesJson.data || [];
 
         setFeedItems(feedData.slice(0, 50));
         setAlerts(alertsData.slice(0, 50));
         setProcessingLogs(logsData.slice(0, 100));
+        setDispatchedReports(dispatchData);
+        setTeamResponses(responsesData);
       } catch (err) {
         console.error("❌ Error loading initial data:", err);
       } finally {

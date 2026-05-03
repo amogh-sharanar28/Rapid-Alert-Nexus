@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { path: '/data-input', label: 'Data Input', icon: Database },
   { path: '/processing', label: 'Processing', icon: Cpu },
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/response', label: 'Response', icon: Radio },
+  // { path: '/response', label: 'Response', icon: Radio },
   { path: '/history', label: 'History', icon: History },
 ];
 
